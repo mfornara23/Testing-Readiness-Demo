@@ -1,12 +1,13 @@
 # Testing Readiness Demo
 
-A small monorepo-style demo that runs **unit**, **end-to-end (Playwright)**, and **performance (JMeter Java DSL)** checks. GitHub Actions runs them in three ordered stages.
+A small monorepo-style demo that runs **unit**, **API (Playwright)**, **end-to-end (Playwright)**, and **performance (JMeter Java DSL)** checks. GitHub Actions runs them in four ordered stages.
 
 ## Repository layout
 
 | Folder | Purpose |
 |--------|---------|
 | `unit-demo/` | Dummy JavaScript module and five Node.js unit tests (`node --test`). |
+| `api-playwright/` | Playwright API test project (`tests/`, `fixtures/`, `helpers/`, `data/`). |
 | `e2e-playwright/` | Two Playwright tests against the OpenCart demo store. |
 | `performance-demo/` | One Maven test using [jmeter-java-dsl](https://abstracta.github.io/jmeter-java-dsl/) against [Demoblaze](https://www.demoblaze.com/). |
 
@@ -25,6 +26,16 @@ cd unit-demo
 npm install
 npm test
 ```
+
+### API tests (Playwright)
+
+```bash
+cd api-playwright
+npm install
+npm test
+```
+
+Specs live in `tests/`. Shared request setup goes in `fixtures/`, clients in `helpers/`, and payloads in `data/`.
 
 ### E2E tests (Playwright)
 
@@ -55,8 +66,9 @@ Triggers on **push** (all branches) and **pull_request**.
 Stages (each job runs only if the previous one succeeds):
 
 1. **unit-testing** — `unit-demo`: `npm install` and `npm test`.
-2. **e2e-testing** — `e2e-playwright`: install Chromium, then `npm test`.
-3. **perf-testing** — `performance-demo`: Temurin JDK 17 with Maven cache, then `mvn -B test`.
+2. **api-testing** — `api-playwright`: `npm install` and `npm test`.
+3. **e2e-testing** — `e2e-playwright`: install Chromium, then `npm test`.
+4. **perf-testing** — `performance-demo`: Temurin JDK 17 with Maven cache, then `mvn -B test`.
 
 ## External services
 

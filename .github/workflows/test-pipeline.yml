@@ -26,9 +26,41 @@ jobs:
         working-directory: unit-demo
         run: npm test
 
-  e2e-testing:
+  api-testing:
     runs-on: ubuntu-latest
     needs: unit-testing
+    if: ${{ always() }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install API test dependencies
+        working-directory: api-playwright
+        run: npm install
+
+      - name: Run API tests
+        working-directory: api-playwright
+        run: npm test
+
+      - name: Upload API test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-playwright-results
+          path: |
+            api-playwright/test-results/
+            api-playwright/playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  e2e-testing:
+    runs-on: ubuntu-latest
+    needs: api-testing
     if: ${{ always() }}
     steps:
       - name: Checkout

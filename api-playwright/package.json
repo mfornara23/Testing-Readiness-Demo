@@ -1,0 +1,11 @@
+{
+  "name": "api-playwright",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --pass-with-no-tests"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2"
+  }
+}
